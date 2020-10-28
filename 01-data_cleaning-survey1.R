@@ -13,9 +13,11 @@
 #### Workspace setup ####
 library(haven)
 library(tidyverse)
-setwd("C:/Users/Sammi-Jo/Desktop/PS3")
+# setwd("C:/Users/Sammi-Jo/Desktop/PS3")
+setwd(".")
 # Read in the raw data (You might need to change this if you use a different dataset)
-raw_data <- read_dta("inputs/ns20200625/ns20200625.dta")
+# raw_data <- read_dta("inputs/ns20200625/ns20200625.dta")
+raw_data <- read_dta("ns20200625/ns20200625.dta")
 # Add the labels
 raw_data <- labelled::to_factor(raw_data)
 # Just keep some variables

@@ -13,8 +13,10 @@
 library(haven)
 library(tidyverse)
 # Read in the raw data.
-setwd("C:/Users/Sammi-Jo/Desktop/PS3")
-raw_data <- read_dta("inputs/usa_00002.dta.gz")
+# setwd("C:/Users/Sammi-Jo/Desktop/PS3")
+setwd(".")
+# raw_data <- read_dta("inputs/usa_00002.dta.gz")
+raw_data <- read_dta("usa_00001.dta")
 
 
 # Add the labels
@@ -24,18 +26,19 @@ raw_data <- labelled::to_factor(raw_data)
 # this depending on your interests)
 reduced_data <- 
   raw_data %>% 
-  select(#region,
-         #stateicp,
+  select(region,
+         stateicp,
          sex, 
-         age)#, 
-         #race, 
-         #hispan,
-         #marst, 
-         #bpl,
-         #citizen,
-         #educd,
-         #labforce,
-         #labforce)
+         age, 
+         race, 
+         hispan,
+         marst,
+         bpl,
+         citizen,
+         educd,
+         labforce,
+         inctot)
+rm(raw_data)
          
 
 #### What's next? ####
@@ -43,16 +46,17 @@ reduced_data <-
 ## Here I am only splitting cells by age, but you 
 ## can use other variables to split by changing
 ## count(age) to count(age, sex, ....)
+head(reduced_data)
 
-reduced_data <- 
-  reduced_data %>%
-  count(age) %>%
-  group_by(age) 
-
-reduced_data <- 
-  reduced_data %>% 
-  filter(age != "less than 1 year old") %>%
-  filter(age != "90 (90+ in 1980 and 1990)")
+# reduced_data <- 
+#   reduced_data %>%
+#   count(age) %>%
+#   group_by(age) 
+# 
+# reduced_data <- 
+#   reduced_data %>% 
+#   filter(age != "less than 1 year old") %>%
+#   filter(age != "90 (90+ in 1980 and 1990)")
 
 reduced_data$age <- as.integer(reduced_data$age)
 

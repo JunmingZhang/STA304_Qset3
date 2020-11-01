@@ -7,11 +7,15 @@ abstract: |
   | First sentence. Second sentence. Third Sentence. Fourth Sentence.
   |
   | **key words:** USA 2020 election
+header-includes:
+   - \usepackage{xcolor}
 output:
   pdf_document: default
   html_document:
     df_print: paged
 ---
+
+\textcolor{red}{Please click \href{https://github.com/JunmingZhang/STA304_Qset3.git}{"here"} to access the GitHub repository for all work.}
 
 ```{r setup, include=FALSE}
 # use tidyverse and brms to build the model and manipulate the data

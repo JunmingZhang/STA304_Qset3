@@ -14,14 +14,22 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+# use tidyverse and brms to build the model and manipulate the data
 library(tidyverse)
+library(magrittr)
+# library(brms)
+library(lme4)
+library(PRROC)
+library(caret)
 
 # Loading in the cleaned survey Data
+# from (Tausanovitch, Chris and Lynn Vavreck, 2020)
 survey_data <- read_csv("outputs/survey_data.csv")
 
 # Loading in the cleaned census Data
+# from (Steven Ruggles, Sarah Flood, Ronald Goeken, Josiah Grover, Erin Meyer, Jose Pacas and Matthew Sobek, 2020) and
+# and (PUMS USA)
 census_data <- read_csv("outputs/census_data.csv")
-
 ```
 
 # Title of your Report
@@ -44,9 +52,16 @@ census_data <- read_csv("outputs/census_data.csv")
 
 ```{r, include=FALSE}
 
+# select cols we need
+survey_set <-
+  survey_data %>% select(sex, age_group, race, hispan, education, state, vote_trump)
+census_set <-
+  census_data %>% select(sex, age_group, race, hispan, education, state, perwt)
+
 # Creating the Model
-model <- lm(vote_trump ~ age, 
-            data=survey_data)
+# model <- lm(vote_trump ~ age, 
+#             data=survey_data)
+
 
 # Model Results (to Report in Results section)
 # summary(model)
@@ -55,16 +70,115 @@ model <- lm(vote_trump ~ age,
 
 ```
 
+
+
+```{r, echo=FALSE, message=FALSE}
+# look at the statistics of the dataset
+summary(survey_set)
+```
+
+
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# we change the some cols to factors for building the model with tidyverse
+# also look at the dataset
+survey_set %<>%
+       mutate_each_(funs(factor(.)), c("sex", "age_group", "race", "hispan", "education", "state"))
+summary(survey_set)
+```
+
+
+```{r, echo=FALSE}
+# look at the percentage of voters who vote Donald Trump
+# this is just a brief check (not formal) without considering Electoral College
+survey_set %>% summarise(prop_vote_trump = sum(vote_trump) / nrow(survey_set))
+```
+
+
+```{r, include=FALSE, warning=FALSE}
+# do not use brms because of limits on library
+# model <- brm(vote_trump ~ sex + age_group + race + hispan + education + (1|state),
+#              data = survey_set,
+#              family = bernoulli())
+
+# create the logistic regression model with logistic regression (a Random Intercept Model),
+# in this model, I use the state as cell
+# use vote_trump so the model predicts the odds (or prob) Trump get selected
+model <- glmer(vote_trump ~ sex + age_group + race + hispan + education + (1|state),
+                     data = survey_set, 
+                     family=binomial)
+```
+
+
+
+
+```{r, include=FALSE}
+# make predictions
+preds = predict(model, new_data=survey_set, type=c("response"))
+pred_result = ifelse(preds > 0.5, 1, 0)
+survey_result = tibble(prediction=pred_result, label=survey_set$vote_trump)
+```
+
+
+
+```{r, echo=FALSE}
+# use a table to show the information about the model (p_value, etc.)
+# used for diagonalise, including p-value
+summary(model)
+```
+
+
+
+
+```{r, echo=FALSE}
+# plot a roc and prc (precision-recall curve) to make diagonalise on the model
+roc_obj <- roc.curve(scores.class0 = survey_result$prediction, weights.class0=survey_result$label, curve=TRUE)
+plot(roc_obj)
+
+pr_obj = pr.curve(scores.class0 = survey_result$prediction, weights.class0=survey_result$label, curve=TRUE)
+plot(pr_obj)
+```
+
+
+
+```{r, echo=FALSE}
+# show accuracy and confusion matrix of the model
+confusionMatrix(as.factor(survey_result$prediction), as.factor(survey_result$label))
+```
+
+
+
 ## Post-Stratification 
 
 <!-- In order to estimate the proportion of voters who will vote for Donald Trump I need to perform a post-stratification analysis. Here I create cells based off different ages. Using the model described in the previous sub-section I will estimate the proportion of voters in each age bin. I will then weight each proportion estimate (within each bin) by the respective population size of that bin and sum those values and divide that by the entire population size.  -->
 
+```{r, echo=FALSE, warning=FALSE}
+# we change the some cols to factors for using the model to make predictions on the census data
+# also look at the dataset
+census_set %<>%
+       mutate_each_(funs(factor(.)), c("sex", "age_group", "race", "hispan", "education", "state"))
+summary(census_set)
+```
+
+
+
+
+
 ```{r, include=FALSE}
+# calculate the weight for each person in his own cell (which is state in our model)
+census_set %>%
+  group_by(state) %>%
+  mutate(cell_prop_of_division_total = perwt / sum(perwt)) -> census_set
 
 # Here I will perform the post-stratification calculation
-census_data$estimate <-
+census_set$estimate <-
   model %>%
-  predict(newdata = census_data)
+  predict(newdata = census_set, type=c("response"))
+
+# census_data$estimate <-
+#   model %>%
+#   predict(newdata = census_data)
 
 # census_data %>%
 #   mutate(alp_predict_prop = estimate*n) %>%
@@ -74,13 +188,53 @@ census_data$estimate <-
 ```
 
 
-# Results
-```{r pic, fig.cap="draw me a table", echo=FALSE, fig.width=4, fig.height=8}
+
+
+
+```{r, echo=FALSE}
+census_set %>%
+  mutate(trump_predict_prop = estimate * cell_prop_of_division_total) %>%
+  group_by(state) %>%
+  summarise(trump_predict = sum(trump_predict_prop), .groups = 'drop') -> ps_result
+ps_result
 ```
 
+# Results
 <!-- Here you will include all results. This includes descriptive statistics, graphs, figures, tables, and model results. Please ensure that everything is well formatted and in a report style. You must also provide an explanation of the results in this section.  -->
 
 <!-- Please ensure that everything is well labelled. So if you have multiple histograms and plots, calling them Figure 1, 2, 3, etc. and referencing them as Figure 1, Figure 2, etc. in your report will be expected. The reader should not get lost in a sea of information. Make sure to have the results be clean, well formatted and digestible. -->
+
+<!-- ```{r pic, fig.cap="draw me a table", echo=FALSE, fig.width=4, fig.height=8}
+``` -->
+
+```{r, echo=FALSE}
+# here we predict who will win the federal election
+# make predictions by considering Electoral College
+ps_result$elected <- ifelse(ps_result$trump_predict > 0.5, "Donald Trump", "Joe Biden")
+
+# number of electoral votes
+# total electoral votes: 538
+ps_result <- ps_result %>%
+  mutate(electoral_vote_dist=
+           case_when(
+             state=="AL" ~ 9, state=="AK" ~ 3, state=="AZ" ~ 11, state== "AR" ~ 6,
+             state=="CA" ~ 55, state=="CO" ~ 9, state=="CT" ~ 7, state=="DE" ~ 3,
+             state=="DC" ~ 3, state=="FL" ~ 29, state=="GA" ~ 16, state=="HI" ~ 4,
+             state=="ID" ~ 4, state=="IL" ~ 20, state=="IN" ~ 11, state=="IA" ~ 6,
+             state=="KS" ~ 6, state=="KY" ~ 8, state=="LA" ~ 8, state=="ME" ~ 4,
+             state=="MD" ~ 10, state=="MA" ~ 11, state=="MI" ~ 16, state=="MN" ~ 10,
+             state=="MS" ~ 6, state=="MO" ~ 10, state=="MT" ~ 3, state=="NE" ~ 5,
+             state=="NV" ~ 6, state=="NH" ~ 4, state=="NJ" ~ 14, state=="NM" ~ 5,
+             state=="NY" ~ 29, state=="NC" ~ 15, state=="ND" ~ 3, state=="OH" ~ 18,
+             state=="OK" ~ 7, state=="OR" ~ 7, state=="PA" ~ 20, state=="RI" ~ 4,
+             state=="SC" ~ 9, state=="SD" ~ 3, state=="TN" ~ 11, state=="TX" ~ 38,
+             state=="UT" ~ 6, state=="VT" ~ 3, state=="VA" ~ 13, state=="WA" ~ 12,
+             state=="WV" ~ 5, state=="WI" ~ 10, state=="WY" ~ 3
+           ))
+
+ps_result %>% group_by(elected) %>%
+  summarise(total_electoral_votes = sum(electoral_vote_dist), .groups = 'drop')
+```
 
 # Discussion
 
@@ -96,10 +250,30 @@ census_data$estimate <-
 
 
 # References
-1. Steven Ruggles, Sarah Flood, Ronald Goeken, Josiah Grover, Erin Meyer, Jose Pacas and Matthew Sobek. IPUMS USA: Version 10.0 [dataset]. Minneapolis, MN: IPUMS, 2020. https://doi.org/10.18128/D010.V10.0
-2. PUMS USA, University of Minnesota, www.ipums.org.
 ```{r, include=FALSE}
 citation("tidyverse")
+citation("magrittr")
+citation("lme4")
+citation("PRROC")
+citation("caret")
 ```
-3. Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686,
+<!-- dataset -->
+1. Tausanovitch, Chris and Lynn Vavreck. 2020. Democracy Fund + UCLA Nationscape, October 10-17, 2019 (version 20200131). Retrieved from [URL].
+2. Steven Ruggles, Sarah Flood, Ronald Goeken, Josiah Grover, Erin Meyer, Jose Pacas and Matthew Sobek. IPUMS USA: Version 10.0 [dataset]. Minneapolis, MN: IPUMS, 2020. https://doi.org/10.18128/D010.V10.0
+3. PUMS USA, University of Minnesota, www.ipums.org.
+<!-- code -->
+4. Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686,
   https://doi.org/10.21105/joss.01686
+5. Stefan Milton Bache and Hadley Wickham (2014). magrittr: A Forward-Pipe Operator for R. R package version
+  1.5. https://CRAN.R-project.org/package=magrittr
+6. Douglas Bates, Martin Maechler, Ben Bolker, Steve Walker (2015). Fitting Linear Mixed-Effects Models Using
+  lme4. Journal of Statistical Software, 67(1), 1-48. doi:10.18637/jss.v067.i01.
+7. Jens Keilwagen, Ivo Grosse and Jan Grau (2014). Area under Precision-Recall Curves for Weighted and
+  Unweighted Data. PLOS ONE (9) 3.
+8. Jan Grau, Ivo Grosse, and Jens Keilwagen (2015). PRROC: computing and visualizing precision-recall and
+  receiver operating characteristic curves in R. Bioinformatics (31) 15, pp. 2595-2597.R package version
+  1.3.1.
+9. Max Kuhn (2020). caret: Classification and Regression Training. R package version 6.0-86.
+  https://CRAN.R-project.org/package=caret
+<!-- other -->
+10. United States Electoral College Votes by State. (n.d.). Retrieved November 01, 2020, from https://www.britannica.com/topic/United-States-Electoral-College-Votes-by-State-1787124

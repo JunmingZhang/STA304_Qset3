@@ -2,7 +2,7 @@
 title: "Title of Your Report"
 subtitle: "Your subtitle"
 author: "Junming Zhang, Hairong Sun, Xiaoxi Bai, Yangyang Liu"
-date: "`r format(Sys.time(), '%A, %B %d, %Y')`"
+date: "`r Sys.setenv(TZ='EST'); format(Sys.time(), '%A, %B %d, %Y')`"
 abstract: |
   | First sentence. Second sentence. Third Sentence. Fourth Sentence.
   |

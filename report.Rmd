@@ -36,17 +36,13 @@ survey_data <- read_csv("outputs/survey_data.csv")
 census_data <- read_csv("outputs/census_data.csv")
 ```
 
-# Title of your Report
+<!-- # Title of your Report -->
 
-## Name(s) of Author(s) 
-## Date
+<!-- ## Name(s) of Author(s)  -->
+<!-- ## Date -->
 
 
-# Model
-
-This is my first line.
-This is my second line.
-This is my third line. 
+<!-- # Model -->
 
 <!-- Here we are interested in predicting the popular vote outcome of the 2020 American federal election (include citation). To do this we are employing a post-stratification technique. In the following sub-sections I will describe the model specifics and the post-stratification calculation. -->
 

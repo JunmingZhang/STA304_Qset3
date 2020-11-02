@@ -6,13 +6,13 @@ date: "`r Sys.setenv(TZ='EST'); format(Sys.time(), '%A, %B %d, %Y')`"
 abstract: |
   | First sentence. Second sentence. Third Sentence. Fourth Sentence.
   |
-  | **key words:** USA 2020 election
+  | **key words:** USA 2020 election, Donald Trump, Joe Biden, prediction
 header-includes:
    - \usepackage{xcolor}
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 ---
 
 \textcolor{red}{\underline{Please click \href{https://github.com/JunmingZhang/STA304_Qset3.git}{\textbf{"here"}} to access the GitHub repository for all work.}}
@@ -246,15 +246,17 @@ ps_result %>% group_by(elected) %>%
 
 # Discussion
 
-<!-- Here you will summarize the previous sections and discuss conclusions drawn from the results. Make sure to elaborate and connect your analysis to the goal of the study. -->
+*Conclusion*
+
+In conclusion, we predict that Joe Biden who is the presidential nominee of democratic party would win in the election. Based on our model, Joe Biden would get 422 electoral votes in total while Donald Trump would only get 116 electoral votes. The difference is quite big because Joe Biden has more states that in favour of voting him.
+
+
 
 ## Weaknesses
-
-<!-- Here we discuss weaknesses of the study, data, analysis, etc. You can also discuss areas for improvement. -->
+Based on the above analysis, there are a few weaknesses of this model. First, the number of variables is quite small in both dataset and model. In the model, we only use 6 variables and we mainly focus on the demographic variables. We neglect variables that keep abreast of times. For example, in the 2016 US election, the Facebook marketing plays a key factor in Trump’s winning [11]. However, the datasets of census and survey do not provide this kind of campaign variables. Thus, the model would be out of date for election of this year. Second, the dataset of census does not contain the information on people’s party preference on democratic and republican. People who like democratic better would be more likely to vote for Joe Biden while US people who like republican more would vote for Donald Trump. With this information, the model would be more precise. We could have a basic estimate on the voting of Joe Biden and Donald Trump. However, this information is not available. Third, when we build the model, we do not consider income factor. Typically, voters for Donald Trump are people who have a lower income while people who has a higher income tend to vote for Joe Biden. Although the income variable in census represents personal total income and the one in survey represents household income, we should still take income into this model. Fourth, when we clean the raw data of census, we are too general on some specific variables. For example, when we clean the variable of race, we combine Asian and Pacific Islander together for convenience. There are a lot of groups under Asian like Chinese, Korean, Japanese and so on. These groups would have some trends on voting based on their background and this may influence the result of election a lot. Nonetheless, we ignore these features in the model and this would cause a weak prediction. Furthermore, it is worth noting that education variable plays a very important role in the election. When we design the survey of election preference, we should include more people that have lower education level. In the survey dataset, it includes more people who have higher education level, and this would make the prediction in favor of Joe Biden [12].  People with higher education level would be more likely to vote for Joe Biden [12]. 
 
 ## Next Steps
-
-<!-- Here you discuss subsequent work to be done after this report. This can include next steps in terms of statistical analysis (perhaps there is a more efficient algorithm available, or perhaps there is a caveat in the data that would allow for some new technique). Future steps should also be specified in terms of the study setting (eg. including a follow-up survey on something, or a subsequent study that would complement the conclusions of your report). -->
+In order to make the estimation of model more accurate, we should find ways to eliminate the above weaknesses. For instance, we could clean the data in a more detailed way and include more variables in the analysis. We should also include survey that contains more people that has lower education level.  Since the election result would be out on November 3rd, we could compare the actual result of election with our prediction. We need to do a post-hoc analysis. First, we could figure out if our prediction result match the real result. And then, we should know how big the difference is between the predicted total electoral votes and the actual one. If the difference is very big, we may need to switch to another model. For example, we could use Principal Component Analysis (PCA) which is an algorism that decreases dimensional space to start the model [13]. This would eliminate some unnecessary variables from the data and mainly focus on the key principles to predict the election. It is also important to figure out which factor is the key success factor on the election. If we do not include that in the model, we definitely need to add that. After, the analysis, we could redesign the model and check if the new one provides a result that is closer to the actual result. Moreover, some machine learning technology could help us to build a better model. The use of artificial neural networks, which is a brain-spired system, would help the model a lot [14]. It would decrease the uncertainty of the model. All of these would better improve the estimation of this model in future elections. 
 
 
 # References
@@ -285,3 +287,7 @@ citation("caret")
   https://CRAN.R-project.org/package=caret
 <!-- other -->
 10. United States Electoral College Votes by State. (n.d.). Retrieved November 01, 2020, from https://www.britannica.com/topic/United-States-Electoral-College-Votes-by-State-1787124
+11. Bump, P. (2019, March 29). All the ways Trump's campaign was aided by Facebook, ranked by importance. Retrieved November 02, 2020, from https://www.washingtonpost.com/news/politics/wp/2018/03/22/all-the-ways-trumps-campaign-was-aided-by-facebook-ranked-by-importance/
+12.How Race and Educational Attainment Factor Into Biden's 2020 Lead. (2020, September 17). Retrieved November 02, 2020, from https://morningconsult.com/2020/09/17/trump-biden-race-education-voters/
+13. Jaadi, Z. (n.d.). A Step by Step Explanation of Principal Component Analysis. Retrieved November 02, 2020, from https://builtin.com/data-science/step-step-explanation-principal-component-analysis
+14. Dormehl, L. (2019, January 06). What is an artificial neural network? Here's everything you need to know. Retrieved November 02, 2020, from https://www.digitaltrends.com/cool-tech/what-is-an-artificial-neural-network/

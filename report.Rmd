@@ -220,7 +220,7 @@ ps_result
 # make predictions by considering Electoral College
 ps_result$elected <- ifelse(ps_result$trump_predict > 0.5, "Donald Trump", "Joe Biden")
 
-# number of electoral votes
+# number of electoral votes (citation 10)
 # total electoral votes: 538
 ps_result <- ps_result %>%
   mutate(electoral_vote_dist=
@@ -291,3 +291,4 @@ citation("caret")
 12.How Race and Educational Attainment Factor Into Biden's 2020 Lead. (2020, September 17). Retrieved November 02, 2020, from https://morningconsult.com/2020/09/17/trump-biden-race-education-voters/
 13. Jaadi, Z. (n.d.). A Step by Step Explanation of Principal Component Analysis. Retrieved November 02, 2020, from https://builtin.com/data-science/step-step-explanation-principal-component-analysis
 14. Dormehl, L. (2019, January 06). What is an artificial neural network? Here's everything you need to know. Retrieved November 02, 2020, from https://www.digitaltrends.com/cool-tech/what-is-an-artificial-neural-network/
+15. Who Can and Can't Vote in U.S. Elections. (n.d.). Retrieved November 02, 2020, from https://www.usa.gov/who-can-vote

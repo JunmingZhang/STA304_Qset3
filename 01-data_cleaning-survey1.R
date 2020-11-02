@@ -69,7 +69,7 @@ reduced_data<-
            ifelse(vote_2020=="Donald Trump", 1, 0))
 
 # focus those who can and will vote and those who support Democrates
-# and Republicans only
+# and Republicans only, and those who can vote (citation 15)
 reduced_data<-
   reduced_data %>%
   filter(registration=="Registered" &

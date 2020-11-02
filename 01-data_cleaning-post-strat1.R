@@ -76,7 +76,7 @@ reduced_data = reduced_data %>%
 reduced_data<-rename(reduced_data, education=educd)
 reduced_data<-rename(reduced_data, state=stateicp)
 
-# choose those can vote
+# choose those can vote, and those who can vote (citation 15)
 reduced_data <-
   reduced_data %>% 
   filter(age >= 18 &

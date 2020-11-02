@@ -10,9 +10,9 @@ abstract: |
 header-includes:
    - \usepackage{xcolor}
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 \textcolor{red}{\underline{Please click \href{https://github.com/JunmingZhang/STA304_Qset3.git}{\textbf{"here"}} to access the GitHub repository for all work.}}

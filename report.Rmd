@@ -1,6 +1,6 @@
 ---
 title: "Use a frequentis multilevel logistic regression model (random intercept) to predict 2020 American Federal Election result and post-stratification to verify the model"
-subtitle: "Problem Set#3"
+subtitle: "Apply the frequentis multilevel logistic regression model and make diagnosis on the performance of the model"
 author: "Junming Zhang, Hairong Sun, Xiaoxi Bai, Yangyang Liu"
 date: "`r Sys.setenv(TZ='EST'); format(Sys.time(), '%A, %B %d, %Y')`"
 abstract: |
@@ -277,5 +277,4 @@ citation("caret")
 13. Jaadi, Z. (n.d.). A Step by Step Explanation of Principal Component Analysis. Retrieved November 02, 2020, from https://builtin.com/data-science/step-step-explanation-principal-component-analysis
 14. Dormehl, L. (2019, January 06). What is an artificial neural network? Here's everything you need to know. Retrieved November 02, 2020, from https://www.digitaltrends.com/cool-tech/what-is-an-artificial-neural-network/
 15. Who Can and Can't Vote in U.S. Elections. (n.d.). Retrieved November 02, 2020, from https://www.usa.gov/who-can-vote 
-
 16. Presidential Election Process. (n.d.). Retrieved November 02, 2020, from https://www.usa.gov/election

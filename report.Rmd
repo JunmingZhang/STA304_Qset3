@@ -113,6 +113,9 @@ pred_result = ifelse(preds > 0.5, 1, 0)
 survey_result = tibble(prediction=pred_result, label=survey_set$vote_trump)
 ```
 
+### Logistic: p-value, AIC, BIC
+
+According to the summary of the model, the p-value of sexmale, raceasian or pacific, raceblack, raceother, hispanmexican, hispannot hispanic, hispanother, and education backgronds are less than 0.05, therefore, these factors are rejecting the null hypothesis. The other factors have p-value that greater than 0.05, which means that there are evidence of not rejecting the null hypothesis. The AIC and BIC are 4335.9 and 4458.9 respectively. AIC and BIC are used to indicate the accuracy after considering the complexity. However, they are usually used to compare between two models. We only have one model presented in this case. Therefore, AIC and BIC are meaningless without the model selection step. It can be meaningful when there are other models exists. The model with less AIC and BIC is better than the other one.
 
 ```{r, echo=FALSE}
 # use a table to show the information about the model (p_value, etc.)
@@ -120,7 +123,7 @@ survey_result = tibble(prediction=pred_result, label=survey_set$vote_trump)
 summary(model)
 ```
 
-## Logistic: ROC and PR curve
+### Logistic: ROC and PR curve
 
 ROC (Receiver Operating Characteristics) curve plot is a visualization of the sensitivity and FPR. The larger the area under the curve (AUC, max = 1) is, the better the curve is. In this model, the AUC is 0.6451397, which means that the performance of this model is moderately credible. PRC (Precision-recall Curve) is used for showing the relation between precision and recall. The AUC is 0.6063118. Therefore, this model can have predictive value if the value is properly set, which is more accurate than random guessing.
 
@@ -136,7 +139,7 @@ plot(pr_obj)
 
 
 
-## Logistic: Confusion Matrix and Accuracy
+### Logistic: Confusion Matrix and Accuracy
 
 The confusion matrix is used for summarizing predicted result and check the true positive and true negative rate of the model. It also gives an accuray about 0.6484, which is not bad in terms of true positive and true negative rate. Also seen from the confusion matrix below, the false positive rate is more than half of the true positive rate (ratio: $\frac{890}{1438}$), and the false negative rate is nearly half of the true negative rate (ratio: $\frac{329}{810}$). Therefore, the model performs terribly with respect to false positive rate and not well with respect to false negative rate.
 

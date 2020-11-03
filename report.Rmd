@@ -244,7 +244,7 @@ ps_result %>% group_by(elected) %>%
 
 *Conclusion*
 
-In conclusion, we predict that Joe Biden who is the presidential nominee of democratic party would win in the election. Based on our model, Joe Biden would get 422 electoral votes in total while Donald Trump would only get 116 electoral votes. The difference is quite big because Joe Biden has more states that in favour of voting him.
+In conclusion, we predict that Joe Biden who is the presidential nominee of democratic party would win in the election. Based on our model, Joe Biden would get 422 electoral votes in total while Donald Trump would only get 116 electoral votes. The difference is quite big because Joe Biden has much more states that in favour of voting him based on our model.
 
 
 

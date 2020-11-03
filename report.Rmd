@@ -44,7 +44,8 @@ In this model, we are predicting the vote outcome of the 2020 American federal e
 We will be using a random intercept model to model the voters who will vote for Donald Trump. We will be using sex, age_group, race, hispan, education, state, and vote_trump to model the probability of voting for Donald Trump. The logistic regression model we are using is:
 
 $$\log\frac{p}{1-p} = \beta_0 + \beta_1 * sexmale +\beta_2 * age\_group18-20 + ... + \beta_{18} * educationtertiary\ \ (not\ \ bachelor) + \epsilon $$ 
-Where p is the probability of Donald Trump got selected. (p/1-p) is the odds of trump winning the election. $\beta_0$ represents intercept of the model which is 2.10152. Additionally, $\beta_1$ to $\beta_{18}$ represent the slope of the model, and relate to each variables. $\beta_1$ = 0.41511, $\beta_2$ = -1.62472, ..., $\beta_{18}$ = -0.45434 respectively according to the summary data. So, for example, for everyone one unit increase in sexmale, we expect a $\beta_1$ increase in the probability of voting for Donald Trump.
+
+Where p is the probability of Donald Trump got selected. $\log\frac{p}{1-p}$ is the odds of trump winning the election. $\beta_0$ represents intercept of the model which is $2.10152$. Residual epsilon represents the error. Additionally, $\beta_1 to \beta_{18}$ represent the slope of the model, and relate to each variables. $\beta_1 = 0.41511$, $\beta_2 = -1.62472$, ..., $\beta_{18} = -0.45434$ respectively according to the summary data. So, for example, for everyone one unit increase in sexmale, we expect a $\beta_1$ increase in the probability of voting for Donald Trump.
 
 
 ```{r, include=FALSE}
@@ -119,6 +120,10 @@ survey_result = tibble(prediction=pred_result, label=survey_set$vote_trump)
 summary(model)
 ```
 
+## Logistic: ROC and PR curve
+
+ROC (Receiver Operating Characteristics) curve plot is a visualization of the sensitivity and FPR. The larger the area under the curve (AUC, max = 1) is, the better the curve is. In this model, the AUC is 0.6451397, which means that the performance of this model is moderately credible. PRC (Precision-recall Curve) is used for showing the relation between precision and recall. The AUC is 0.6063118. Therefore, this model can have predictive value if the value is properly set, which is more accurate than random guessing.
+
 
 ```{r, echo=FALSE}
 # plot a roc and prc (precision-recall curve) to make diagonalise on the model
@@ -128,6 +133,12 @@ plot(roc_obj)
 pr_obj = pr.curve(scores.class0 = survey_result$prediction, weights.class0=survey_result$label, curve=TRUE)
 plot(pr_obj)
 ```
+
+
+
+## Logistic: Confusion Matrix and Accuracy
+
+The confusion matrix is used for summarizing predicted result. The row represents the prediction by algorithm, while the column represents the actual collected data. From the table, it is obvious that 801 is about twice larger than 329. This means that there are more cases predicted correctly than falsely in this model. However, the accuracy is 0.6484. It is not high enough to evaluate this model.
 
 
 ```{r, echo=FALSE}
@@ -215,11 +226,15 @@ ps_result %>% group_by(elected) %>%
 
 # Discussion
 
-*Conclusion*
+## Summary
+We try to build a logistic regression model to predict whether Donald Trump or Joe Biden will win the final federal election. First, we use the electoral college to predict the outcome of the general election and select the variables “sex, age_group”, “race”, “hispan”, “education”, and “state” to create our model. Then we made the final model diagnosis by judging AIC and BIC, observing p-value, roc curve, pc curve, and confusion matrix.
+
+Then we conducted Post-Stratification, which is a random sampling of a population. In the case of insufficient information, we can use the MR model to predict census data to predict the voting result and perform a post-Stratification analysis. We will predict the proportion of voters in favour of voting in each state and calculate who won more than 270 votes at the end. Therefore, we will predict the voting situation of voters in 51 states in the U.S. Among them, from the model prediction results, we can see that voters in Arkansas (AR) and Montana (MT) tend to vote for Trump. However, in Minnesota (MN) and Maryland (MD) states, Trump is predicted to have low approval rate, indicating that Joe Biden has a relatively high win rate in these states. By calculating total electoral votes, we estimate that Joe Biden will receive a total of 422 electoral votes, while Donald Trump will only receive 116 electoral votes; therefore, we expect the democratic presidential candidate Biden to win the final election.
+
+
+## Conclusion
 
 In conclusion, we predict that Joe Biden who is the presidential nominee of democratic party would win in the election. Based on our model, Joe Biden would get 422 electoral votes in total while Donald Trump would only get 116 electoral votes. The difference is quite big because Joe Biden has much more states that in favour of voting him based on our model.
-
-
 
 
 ## Weaknesses
@@ -258,9 +273,9 @@ citation("caret")
 <!-- other -->
 10. United States Electoral College Votes by State. (n.d.). Retrieved November 01, 2020, from https://www.britannica.com/topic/United-States-Electoral-College-Votes-by-State-1787124
 11. Bump, P. (2019, March 29). All the ways Trump's campaign was aided by Facebook, ranked by importance. Retrieved November 02, 2020, from https://www.washingtonpost.com/news/politics/wp/2018/03/22/all-the-ways-trumps-campaign-was-aided-by-facebook-ranked-by-importance/
-12.How Race and Educational Attainment Factor Into Biden's 2020 Lead. (2020, September 17). Retrieved November 02, 2020, from https://morningconsult.com/2020/09/17/trump-biden-race-education-voters/
+12. How Race and Educational Attainment Factor Into Biden's 2020 Lead. (2020, September 17). Retrieved November 02, 2020, from https://morningconsult.com/2020/09/17/trump-biden-race-education-voters/
 13. Jaadi, Z. (n.d.). A Step by Step Explanation of Principal Component Analysis. Retrieved November 02, 2020, from https://builtin.com/data-science/step-step-explanation-principal-component-analysis
 14. Dormehl, L. (2019, January 06). What is an artificial neural network? Here's everything you need to know. Retrieved November 02, 2020, from https://www.digitaltrends.com/cool-tech/what-is-an-artificial-neural-network/
-15. Who Can and Can't Vote in U.S. Elections. (n.d.). Retrieved November 02, 2020, from https://www.usa.gov/who-can-vote
+15. Who Can and Can't Vote in U.S. Elections. (n.d.). Retrieved November 02, 2020, from https://www.usa.gov/who-can-vote 
+
 16. Presidential Election Process. (n.d.). Retrieved November 02, 2020, from https://www.usa.gov/election
-<!-- _ -->

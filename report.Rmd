@@ -208,12 +208,8 @@ ps_result
 ```
 
 # Results
-<!-- Here you will include all results. This includes descriptive statistics, graphs, figures, tables, and model results. Please ensure that everything is well formatted and in a report style. You must also provide an explanation of the results in this section.  -->
 
-<!-- Please ensure that everything is well labelled. So if you have multiple histograms and plots, calling them Figure 1, 2, 3, etc. and referencing them as Figure 1, Figure 2, etc. in your report will be expected. The reader should not get lost in a sea of information. Make sure to have the results be clean, well formatted and digestible. -->
-
-<!-- ```{r pic, fig.cap="draw me a table", echo=FALSE, fig.width=4, fig.height=8}
-``` -->
+In this section, we will predict whether Donald Trump or Joe Biden will win the final federal election. The total number of electoral votes is 538, and the proportion of people who are willing to vote for Trump is predicted to be around 51% by using survey data. However this result has no personal weight which means that it cannot be used as the final result. It can only be used as a reference for future predictions. Therefore, we make predictions about the outcome of the general election by considering the electoral college. This model is accounted for variables of “sex” “age_group”, “race”, “hispan”, "state" and "education". There are 51 states in America based on the dataset. We will predict the voting situation of these state voters. The prediction results show that there are 27 states where the percentage of voting Trump is between 0.4 and 0.5. For example, the state of  Alaska (AK) has a 0.468 (46.8%) predicted voting rate of Trump. In the state of Alabama (AL), the number is 0.500 (50.0%). It is very balanced. Trump and Biden would do more campaigns on this kind of states to increase the possibility of winning. Moreover, the result demonstrates that in the state of California (CA) and Connecticut (CT), Trump’s support is slightly weaker, with only 0.402 (40.2%) and 0.381 (38.1%) under the estimation. However, in the state of Arkansas (AR) and Montana (MT) the support rate for Trump is relatively high with rate of 0.560 (56.0%) and 0.583 (58.3%). In the state of District of Minnesota (MN) and Maryland (MD), we predict that voters’ support for Trump would be the lowest, 0.353 (35.3%) and 0.345 (34.5%) respectively. According to our model's prediction result, Joe Biden will receive a total of 422 electoral votes, while Donald Trump will only receive 116 electoral votes. Joe Biden has more states in favor of voting for him, so we expect democratic presidential candidate, Joe Biden, to win the election.
 
 ```{r, echo=FALSE}
 # here we predict who will win the federal election
@@ -249,6 +245,7 @@ ps_result %>% group_by(elected) %>%
 *Conclusion*
 
 In conclusion, we predict that Joe Biden who is the presidential nominee of democratic party would win in the election. Based on our model, Joe Biden would get 422 electoral votes in total while Donald Trump would only get 116 electoral votes. The difference is quite big because Joe Biden has more states that in favour of voting him.
+
 
 
 

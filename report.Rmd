@@ -1,12 +1,12 @@
 ---
-title: "Use a frequentis multilevel regression model (random intercept) to predict 2020 American Federal Election result and post-stratification to verify the model"
+title: "Use a frequentis multilevel logistic regression model (random intercept) to predict 2020 American Federal Election result and post-stratification to verify the model"
 subtitle: "Problem Set#3"
 author: "Junming Zhang, Hairong Sun, Xiaoxi Bai, Yangyang Liu"
 date: "`r Sys.setenv(TZ='EST'); format(Sys.time(), '%A, %B %d, %Y')`"
 abstract: |
   | This report focused on using a frequentis multilevel regression model (random intercept) to predict if Donald Trump or Joe Biden can be selected as 2020 USA president. In order to build the model, we use a survey dataset (Tausanovitch, Chris and Lynn Vavreck, 2019)(Steven Ruggles, Sarah Flood, Ronald Goeken, Josiah Grover, Erin Meyer, Jose Pacas and Matthew Sobek, 2020) to build the model and a census dataset (PUMS USA, 2020) to predict who will be elected for post stratification purpose. Our model predicts that Joe Biden will be elected with significant superiority with respect to electoral votes, and we discussed the result. However, since there are some drawbacks in our model, we also discuss the weakness and how we can improve it.
   |
-  | **key words:** USA 2020 election, Donald Trump, Joe Biden, prediction
+  | **key words:** USA 2020 election, Donald Trump, Joe Biden, multilevel logistic regression model, post-stratification, prediction
 header-includes:
    - \usepackage{xcolor}
 output:

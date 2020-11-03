@@ -36,27 +36,16 @@ survey_data <- read_csv("outputs/survey_data.csv")
 census_data <- read_csv("outputs/census_data.csv")
 ```
 
-# Title of your Report
-
-## Name(s) of Author(s) 
-## Date
-
-
 # Model
-
-This is my first line.
-This is my second line.
-This is my third line. 
-
-<!-- Here we are interested in predicting the popular vote outcome of the 2020 American federal election (include citation). To do this we are employing a post-stratification technique. In the following sub-sections I will describe the model specifics and the post-stratification calculation. -->
+In this model, we are predicting the vote outcome of the 2020 American federal election by employing random intercept model and post-stratification technique. In the following sub-sections we will describe the logistic model regression specifics and the post-stratification calculation.
 
 
 ## Model Specifics
-<!-- I will (incorrectly) be using a linear regression model to model the proportion of voters who will vote for Donald Trump. This is a naive model. I will only be using age, which is recorded as a numeric variable, to model the probability of voting for Donald Trump. The simple linear regression model I am using is: -->
+We will be using a random intercept model to model the voters who will vote for Donald Trump. We will be using sex, age_group, race, hispan, education, state, and vote_trump to model the probability of voting for Donald Trump. The logistic regression model we are using is:
 
-<!-- $$ y = \beta_0+\beta_1  x_{age} + \epsilon$$ -->
+$$\log\frac{p}{1-p} = \beta_0 + \beta_1 * sexmale +\beta_2 * age\_group18-20 + ... + \beta_{18} * educationtertiary\ \ (not\ \ bachelor) + \epsilon $$ 
+Where p is the probability of Donald Trump got selected. (p/1-p) is the odds of trump winning the election. $\beta_0$ represents intercept of the model which is 2.10152. Additionally, $\beta_1$ to $\beta_{18}$ represent the slope of the model, and relate to each variables. $\beta_1$ = 0.41511, $\beta_2$ = -1.62472, ..., $\beta_{18}$ = -0.45434 respectively according to the summary data. So, for example, for everyone one unit increase in sexmale, we expect a $\beta_1$ increase in the probability of voting for Donald Trump.
 
-<!-- Where $y$ represents the proportion of voters who will vote for Donald Trump. Similarly, $\beta_0$ represents the intercept of the model, and is the probability of voting for Donald Trump at age 0. Additionally, $\beta_1$ represents the slope of the model. So, for everyone one unit increase in age, we expect a $\beta_1$ increase in the probability of voting for Donald Trump. -->
 
 ```{r, include=FALSE}
 
@@ -79,13 +68,10 @@ census_set <-
 ```
 
 
-
 ```{r, echo=FALSE, message=FALSE}
 # look at the statistics of the dataset
 summary(survey_set)
 ```
-
-
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -119,8 +105,6 @@ model <- glmer(vote_trump ~ sex + age_group + race + hispan + education + (1|sta
 ```
 
 
-
-
 ```{r, include=FALSE}
 # make predictions
 preds = predict(model, new_data=survey_set, type=c("response"))
@@ -129,14 +113,11 @@ survey_result = tibble(prediction=pred_result, label=survey_set$vote_trump)
 ```
 
 
-
 ```{r, echo=FALSE}
 # use a table to show the information about the model (p_value, etc.)
 # used for diagonalise, including p-value
 summary(model)
 ```
-
-
 
 
 ```{r, echo=FALSE}
@@ -149,17 +130,15 @@ plot(pr_obj)
 ```
 
 
-
 ```{r, echo=FALSE}
 # show accuracy and confusion matrix of the model
 confusionMatrix(as.factor(survey_result$prediction), as.factor(survey_result$label))
 ```
 
 
-
 ## Post-Stratification 
 
-<!-- In order to estimate the proportion of voters who will vote for Donald Trump I need to perform a post-stratification analysis. Here I create cells based off different ages. Using the model described in the previous sub-section I will estimate the proportion of voters in each age bin. I will then weight each proportion estimate (within each bin) by the respective population size of that bin and sum those values and divide that by the entire population size.  -->
+Post-stratification refers to the random sampling of a population and sampling of a sample n. After the survey, n units are divided into several layers according to certain stratification factors. Then stratified sampling estimation is carried out. In this project, post stratification is collecting the census data and applying the MR model to the census data to predict each individuals’ voting result. It is useful because it is difficult to stratify the whole in a certain way beforehand. And the operation is simple, low cost, in the case of incomplete information, can be applied. In order to estimate the proportion of voters who will vote for Donald Trump we need to perform a post-stratification analysis. Here we create cells based on different states. Using the model described in the previous sub-section we will estimate the proportion of voters in each state. We will then weight each proportion estimate (within each state) by the respective population size of that state and sum those values and divide that by the entire population size. The reason why we choose "state" is because each state have electoral votes (total 538 votes this year) and who won more than 270 electoral votes wins the election [16]. Therefore, it is essential to predict according to states.
 
 ```{r, echo=FALSE, warning=FALSE}
 # we change the some cols to factors for using the model to make predictions on the census data
@@ -168,9 +147,6 @@ census_set %<>%
        mutate_each_(funs(factor(.)), c("sex", "age_group", "race", "hispan", "education", "state"))
 summary(census_set)
 ```
-
-
-
 
 
 ```{r, include=FALSE}
@@ -194,9 +170,6 @@ census_set$estimate <-
 
 
 ```
-
-
-
 
 
 ```{r, echo=FALSE}
@@ -289,3 +262,5 @@ citation("caret")
 13. Jaadi, Z. (n.d.). A Step by Step Explanation of Principal Component Analysis. Retrieved November 02, 2020, from https://builtin.com/data-science/step-step-explanation-principal-component-analysis
 14. Dormehl, L. (2019, January 06). What is an artificial neural network? Here's everything you need to know. Retrieved November 02, 2020, from https://www.digitaltrends.com/cool-tech/what-is-an-artificial-neural-network/
 15. Who Can and Can't Vote in U.S. Elections. (n.d.). Retrieved November 02, 2020, from https://www.usa.gov/who-can-vote
+16. Presidential Election Process. (n.d.). Retrieved November 02, 2020, from https://www.usa.gov/election
+<!-- _ -->
